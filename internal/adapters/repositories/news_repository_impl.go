@@ -3,11 +3,13 @@ package repositories
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/JkLondon/mcp-stocks-info-server/internal/adapters/repositories/apis"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/repositories"
 	"github.com/JkLondon/mcp-stocks-info-server/pkg/cache"
-	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -278,14 +280,18 @@ func (r *NewsRepositoryImpl) fetchTodayNewsFromAPI(ctx context.Context) ([]model
 
 	// Сохраняем полученные новости в базу данных
 	for i := range news {
-		r.SaveNews(ctx, &news[i])
+		if err := r.SaveNews(ctx, &news[i]); err != nil {
+			log.Printf("Ошибка сохранения новости %s: %v", news[i].ID, err)
+		}
 	}
 
 	// Обновляем кэш
 	if r.useCache && len(news) > 0 {
 		today := time.Now().Format("2006-01-02")
 		cacheKey := fmt.Sprintf("news:date:%s", today)
-		r.cache.Set(ctx, cacheKey, news, r.cacheExpiry)
+		if err := r.cache.Set(ctx, cacheKey, news, r.cacheExpiry); err != nil {
+			log.Printf("Ошибка кэширования новостей за сегодня: %v", err)
+		}
 	}
 
 	return news, nil
@@ -301,13 +307,17 @@ func (r *NewsRepositoryImpl) fetchNewsByKeywordFromAPI(ctx context.Context, keyw
 
 	// Сохраняем полученные новости в базу данных
 	for i := range news {
-		r.SaveNews(ctx, &news[i])
+		if err := r.SaveNews(ctx, &news[i]); err != nil {
+			log.Printf("Ошибка сохранения новости %s: %v", news[i].ID, err)
+		}
 	}
 
 	// Обновляем кэш
 	if r.useCache && len(news) > 0 {
 		cacheKey := fmt.Sprintf("news:keyword:%s", keyword)
-		r.cache.Set(ctx, cacheKey, news, r.cacheExpiry)
+		if err := r.cache.Set(ctx, cacheKey, news, r.cacheExpiry); err != nil {
+			log.Printf("Ошибка кэширования новостей по ключевому слову %s: %v", keyword, err)
+		}
 	}
 
 	return news, nil

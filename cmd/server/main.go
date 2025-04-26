@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"github.com/JkLondon/mcp-stocks-info-server/pkg/db"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/JkLondon/mcp-stocks-info-server/pkg/db"
 
 	repositories2 "github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/repositories"
 
@@ -68,7 +69,11 @@ func main() {
 		if err != nil {
 			log.Fatalf("Ошибка подключения к MongoDB: %v", err)
 		}
-		defer mongoDB.Close(ctx)
+		defer func() {
+			if err := mongoDB.Close(ctx); err != nil {
+				log.Printf("Ошибка при закрытии подключения к MongoDB: %v", err)
+			}
+		}()
 		log.Printf("Подключение к MongoDB: %s/%s", cfg.Database.URI, cfg.Database.Database)
 	} else {
 		log.Printf("ПРЕДУПРЕЖДЕНИЕ: URI базы данных не указан, будет использоваться только кэш")

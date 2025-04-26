@@ -2,8 +2,9 @@ package services
 
 import (
 	"context"
-	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 	"time"
+
+	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 )
 
 // StockService определяет интерфейс сервиса для работы с акциями

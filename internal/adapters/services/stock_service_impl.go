@@ -3,11 +3,12 @@ package services
 import (
 	"context"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/repositories"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/services"
-	"strings"
-	"time"
 )
 
 // StockServiceImpl реализация интерфейса StockService

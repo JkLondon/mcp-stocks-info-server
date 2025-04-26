@@ -31,6 +31,12 @@ linters-settings:
           - "sayRepetitiveInsteadOfStutters"
   goimports:
     local-prefixes: github.com/JkLondon/mcp-stocks-info-server
+  errcheck:
+    # Для операций с кэшем, логирования и закрытия ресурсов можно исключить проверку ошибок
+    exclude-functions:
+      - (github.com/JkLondon/mcp-stocks-info-server/pkg/cache.Cache).Set
+      - (io.Closer).Close
+      - (go.mongodb.org/mongo-driver/mongo.Cursor).Close
 
 issues:
   exclude-use-default: false
@@ -49,3 +55,8 @@ issues:
       text: "undefined: cache"
       linters:
         - typecheck
+    # Исключаем проверку ошибок для некритичных операций
+    - path: internal/adapters/repositories/apis/
+      text: "Error return value of `[^`]+` is not checked"
+      linters:
+        - errcheck

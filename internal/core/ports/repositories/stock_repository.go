@@ -2,8 +2,9 @@ package repositories
 
 import (
 	"context"
-	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 	"time"
+
+	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 )
 
 // StockRepository определяет интерфейс для работы с акциями

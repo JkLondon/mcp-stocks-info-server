@@ -4,14 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/JkLondon/mcp-stocks-info-server/internal/config"
-	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
-	"github.com/JkLondon/mcp-stocks-info-server/pkg/cache"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/JkLondon/mcp-stocks-info-server/internal/config"
+	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
+	"github.com/JkLondon/mcp-stocks-info-server/pkg/cache"
 )
 
 // NewsAPIClient представляет собой клиент для работы с API новостей

@@ -3,18 +3,19 @@ package mcp
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/JkLondon/mcp-stocks-info-server/internal/config"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/services"
-	"log"
-	"time"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 )
 
-// MCPServer представляет собой MCP сервер для работы с акциями и новостями
-type MCPServer struct {
+// Server представляет собой MCP сервер для работы с акциями и новостями
+type Server struct {
 	server       *server.MCPServer
 	stockService services.StockService
 	newsService  services.NewsService
@@ -22,7 +23,7 @@ type MCPServer struct {
 }
 
 // NewMCPServer создает новый экземпляр MCP сервера
-func NewMCPServer(cfg *config.Config, stockService services.StockService, newsService services.NewsService) *MCPServer {
+func NewMCPServer(cfg *config.Config, stockService services.StockService, newsService services.NewsService) *Server {
 	// Создаем MCP сервер
 
 	// Логирование запросов
@@ -57,7 +58,7 @@ func NewMCPServer(cfg *config.Config, stockService services.StockService, newsSe
 		server.WithHooks(hooks),
 	)
 
-	return &MCPServer{
+	return &Server{
 		server:       mcpServer,
 		stockService: stockService,
 		newsService:  newsService,
@@ -66,7 +67,7 @@ func NewMCPServer(cfg *config.Config, stockService services.StockService, newsSe
 }
 
 // Start запускает MCP сервер
-func (s *MCPServer) Start() error {
+func (s *Server) Start() error {
 	// Регистрируем инструменты (tools)
 	s.registerTools()
 
@@ -78,7 +79,7 @@ func (s *MCPServer) Start() error {
 }
 
 // registerTools регистрирует инструменты (tools) в MCP сервере
-func (s *MCPServer) registerTools() {
+func (s *Server) registerTools() {
 	// Регистрируем инструменты для работы с акциями
 	s.registerStockTools()
 
@@ -87,7 +88,7 @@ func (s *MCPServer) registerTools() {
 }
 
 // registerStockTools регистрирует инструменты для работы с акциями
-func (s *MCPServer) registerStockTools() {
+func (s *Server) registerStockTools() {
 	// Инструмент для получения информации об акции
 	getStockTool := mcp.NewTool("get_stock_info",
 		mcp.WithDescription("Получить информацию о котировке акции на MOEX"),
@@ -132,7 +133,7 @@ func (s *MCPServer) registerStockTools() {
 }
 
 // registerNewsTools регистрирует инструменты для работы с новостями
-func (s *MCPServer) registerNewsTools() {
+func (s *Server) registerNewsTools() {
 	// Инструмент для получения новостей за сегодня
 	getTodayNewsTool := mcp.NewTool("get_today_news",
 		mcp.WithDescription("Получить финансовые новости за сегодня"),
@@ -167,7 +168,7 @@ func (s *MCPServer) registerNewsTools() {
 }
 
 // registerPrompts регистрирует шаблоны в MCP сервере
-func (s *MCPServer) registerPrompts() {
+func (s *Server) registerPrompts() {
 	// Шаблон для анализа акции
 	stockAnalysisPrompt := mcp.NewPrompt("stock_analysis",
 		mcp.WithPromptDescription("Анализ котировок акции"),
@@ -197,7 +198,7 @@ func (s *MCPServer) registerPrompts() {
 // Обработчики инструментов для акций
 
 // handleGetStockInfo обрабатывает запрос на получение информации об акции
-func (s *MCPServer) handleGetStockInfo(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func (s *Server) handleGetStockInfo(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	ticker, ok := request.Params.Arguments["ticker"].(string)
 	if !ok {
 		return mcp.NewToolResultError("параметр ticker должен быть строкой"), nil
@@ -229,7 +230,7 @@ func (s *MCPServer) handleGetStockInfo(ctx context.Context, request mcp.CallTool
 }
 
 // handleGetTopGainers обрабатывает запрос на получение топ растущих акций
-func (s *MCPServer) handleGetTopGainers(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func (s *Server) handleGetTopGainers(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	limit := 10 // Значение по умолчанию
 	if limitVal, ok := request.Params.Arguments["limit"].(float64); ok {
 		limit = int(limitVal)
@@ -255,7 +256,7 @@ func (s *MCPServer) handleGetTopGainers(ctx context.Context, request mcp.CallToo
 }
 
 // handleGetTopLosers обрабатывает запрос на получение топ падающих акций
-func (s *MCPServer) handleGetTopLosers(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func (s *Server) handleGetTopLosers(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	limit := 10 // Значение по умолчанию
 	if limitVal, ok := request.Params.Arguments["limit"].(float64); ok {
 		limit = int(limitVal)
@@ -281,7 +282,7 @@ func (s *MCPServer) handleGetTopLosers(ctx context.Context, request mcp.CallTool
 }
 
 // handleSearchStocks обрабатывает запрос на поиск акций
-func (s *MCPServer) handleSearchStocks(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func (s *Server) handleSearchStocks(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	query, ok := request.Params.Arguments["query"].(string)
 	if !ok {
 		return mcp.NewToolResultError("параметр query должен быть строкой"), nil
@@ -309,7 +310,7 @@ func (s *MCPServer) handleSearchStocks(ctx context.Context, request mcp.CallTool
 // Обработчики инструментов для новостей
 
 // handleGetTodayNews обрабатывает запрос на получение новостей за сегодня
-func (s *MCPServer) handleGetTodayNews(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func (s *Server) handleGetTodayNews(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	limit := 0 // 0 означает все новости
 	if limitVal, ok := request.Params.Arguments["limit"].(float64); ok {
 		limit = int(limitVal)
@@ -343,7 +344,7 @@ func (s *MCPServer) handleGetTodayNews(ctx context.Context, request mcp.CallTool
 }
 
 // handleSearchNews обрабатывает запрос на поиск новостей по ключевому слову
-func (s *MCPServer) handleSearchNews(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func (s *Server) handleSearchNews(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	keyword, ok := request.Params.Arguments["keyword"].(string)
 	if !ok {
 		return mcp.NewToolResultError("параметр keyword должен быть строкой"), nil
@@ -372,7 +373,7 @@ func (s *MCPServer) handleSearchNews(ctx context.Context, request mcp.CallToolRe
 }
 
 // handleGetNewsByTicker обрабатывает запрос на получение новостей по тикеру
-func (s *MCPServer) handleGetNewsByTicker(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
+func (s *Server) handleGetNewsByTicker(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
 	ticker, ok := request.Params.Arguments["ticker"].(string)
 	if !ok {
 		return mcp.NewToolResultError("параметр ticker должен быть строкой"), nil
@@ -403,7 +404,7 @@ func (s *MCPServer) handleGetNewsByTicker(ctx context.Context, request mcp.CallT
 // Обработчики шаблонов
 
 // handleStockAnalysisPrompt обрабатывает запрос на шаблон анализа акции
-func (s *MCPServer) handleStockAnalysisPrompt(ctx context.Context, request mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
+func (s *Server) handleStockAnalysisPrompt(ctx context.Context, request mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
 	ticker, ok := request.Params.Arguments["ticker"]
 	if !ok || ticker == "" {
 		return nil, fmt.Errorf("требуется параметр ticker")
@@ -470,7 +471,7 @@ func (s *MCPServer) handleStockAnalysisPrompt(ctx context.Context, request mcp.G
 }
 
 // handleMarketOverviewPrompt обрабатывает запрос на шаблон обзора рынка
-func (s *MCPServer) handleMarketOverviewPrompt(ctx context.Context, request mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
+func (s *Server) handleMarketOverviewPrompt(ctx context.Context, request mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
 	// Получаем топ растущих акций
 	topGainers, err := s.stockService.GetMOEXTopGainers(ctx, 5)
 	if err != nil {
@@ -552,7 +553,7 @@ func (s *MCPServer) handleMarketOverviewPrompt(ctx context.Context, request mcp.
 }
 
 // handleNewsAnalysisPrompt обрабатывает запрос на шаблон анализа новостей
-func (s *MCPServer) handleNewsAnalysisPrompt(ctx context.Context, request mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
+func (s *Server) handleNewsAnalysisPrompt(ctx context.Context, request mcp.GetPromptRequest) (*mcp.GetPromptResult, error) {
 	// Получаем новости за сегодня
 	todayNews, err := s.newsService.GetTodayNews(ctx)
 	if err != nil {

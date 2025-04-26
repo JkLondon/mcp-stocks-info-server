@@ -3,10 +3,11 @@ package services
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/repositories"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/services"
-	"time"
 )
 
 // NewsServiceImpl реализация интерфейса NewsService
