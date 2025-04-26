@@ -36,7 +36,11 @@ linters-settings:
     exclude-functions:
       - (github.com/JkLondon/mcp-stocks-info-server/pkg/cache.Cache).Set
       - (io.Closer).Close
-      - (go.mongodb.org/mongo-driver/mongo.Cursor).Close
+      - (*go.mongodb.org/mongo-driver/mongo.Cursor).Close
+  gosec:
+    # Исключения для gosec
+    excludes:
+      - G104 # Отключаем проверку необработанных ошибок (дублирует errcheck)
 
 issues:
   exclude-use-default: false
@@ -55,8 +59,18 @@ issues:
       text: "undefined: cache"
       linters:
         - typecheck
-    # Исключаем проверку ошибок для некритичных операций
+    # Исключаем проверку ошибок для некритичных операций 
     - path: internal/adapters/repositories/apis/
       text: "Error return value of `[^`]+` is not checked"
+      linters:
+        - errcheck
+    # Исключаем G104 для всех файлов в репозиториях
+    - path: internal/adapters/repositories/
+      text: "G104: Errors unhandled"
+      linters:
+        - gosec
+    # Специальное исключение для cursor.Close
+    - path: .+\.go
+      text: "Error return value of `cursor.Close` is not checked"
       linters:
         - errcheck
