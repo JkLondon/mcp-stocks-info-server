@@ -82,10 +82,7 @@ func (m *MOEXAPIClient) GetStock(ctx context.Context, ticker string) (*models.St
 	}
 
 	// Преобразование данных в модель Stock (зависит от формата ответа MOEX API)
-	stock, err := parseStockFromResponse(responseData, ticker)
-	if err != nil {
-		return nil, err
-	}
+	stock := parseStockFromResponse(responseData, ticker)
 
 	// Сохраняем в кэш
 	if m.useCache {
@@ -155,10 +152,7 @@ func (m *MOEXAPIClient) GetTopGainers(ctx context.Context, limit int) ([]models.
 	}
 
 	// Парсим данные о топовых акциях (зависит от формата ответа MOEX API)
-	stocks, err := parseStocksFromResponse(responseData)
-	if err != nil {
-		return nil, err
-	}
+	stocks := parseStocksFromResponse(responseData)
 
 	// Сохраняем в кэш
 	if m.useCache {
@@ -171,7 +165,7 @@ func (m *MOEXAPIClient) GetTopGainers(ctx context.Context, limit int) ([]models.
 // Вспомогательные функции для парсинга ответов API
 
 // parseStockFromResponse преобразует JSON-ответ в модель Stock
-func parseStockFromResponse(data map[string]interface{}, ticker string) (*models.Stock, error) {
+func parseStockFromResponse(data map[string]interface{}, ticker string) *models.Stock {
 	// Примечание: реальный парсинг зависит от структуры ответа MOEX API
 	// Это упрощенный пример
 
@@ -214,7 +208,7 @@ func parseStockFromResponse(data map[string]interface{}, ticker string) (*models
 }
 
 // parseStocksFromResponse преобразует JSON-ответ в слайс моделей Stock
-func parseStocksFromResponse(data map[string]interface{}) ([]models.Stock, error) {
+func parseStocksFromResponse(data map[string]interface{}) []models.Stock {
 	// Примечание: реальный парсинг зависит от структуры ответа MOEX API
 	// Это упрощенный пример
 
@@ -294,7 +288,7 @@ func parseStocksFromResponse(data map[string]interface{}) ([]models.Stock, error
 		}
 	}
 
-	return stocks, nil
+	return stocks
 }
 
 // max возвращает максимальное значение из чисел

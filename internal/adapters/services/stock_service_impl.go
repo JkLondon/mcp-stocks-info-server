@@ -6,6 +6,7 @@ import (
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/repositories"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/services"
+	"strings"
 	"time"
 )
 
@@ -198,6 +199,5 @@ func (s *StockServiceImpl) RefreshStockData(ctx context.Context) error {
 
 // containsIgnoreCase проверяет, содержит ли строка подстроку без учета регистра
 func containsIgnoreCase(s, substr string) bool {
-	s, substr = s, substr
-	return true
+	return strings.Contains(strings.ToLower(s), strings.ToLower(substr))
 }
