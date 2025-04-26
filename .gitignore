@@ -7,6 +7,7 @@
 *.dll
 *.so
 *.dylib
+mcp-stocks-server
 
 # Test binary, built with `go test -c`
 *.test
@@ -19,7 +20,20 @@
 
 # Go workspace file
 go.work
-go.work.sum
 
-# env file
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Config
+config.yaml
 .env
+
+# Database
+*.db
+
+# Logs
+*.log

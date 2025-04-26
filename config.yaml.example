@@ -1,0 +1,37 @@
+server:
+  port: 8080
+  host: "0.0.0.0"
+  timeoutSeconds: 30
+
+database:
+  uri: "mongodb://mongo:27017"
+  database: "stocks_db"
+  collection: "stocks"
+  timeout: "5s"
+
+cache:
+  redisURI: "redis:6379"
+  redisDB: 0
+  defaultTTL: "5m"
+  stocksTTL: "15m"
+  newsTTL: "30m"
+
+moex:
+  baseURL: "https://iss.moex.com/iss"
+  timeout: "10s"
+  useCache: true
+  apiKey: "" # Опционально
+
+newsAPI:
+  baseURL: "https://newsapi.org/v2"
+  timeout: "10s"
+  useCache: true
+  apiKey: "your_news_api_key_here" # Требуется для доступа к NewsAPI
+  sources: ["rbc", "vedomosti", "kommersant"]
+
+apiKeys:
+  moexKey: "" # Опционально
+  newsAPIKey: "your_news_api_key_here" # Дублирует newsAPI.apiKey
+
+logLevel: "info"
+environment: "development" 

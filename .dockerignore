@@ -1,0 +1,29 @@
+# Общие файлы и директории
+.git
+.gitignore
+.github
+.idea
+.vscode
+*.md
+*.log
+
+# Файлы проекта
+bin/
+tmp/
+
+# Тестовые файлы
+*_test.go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+README.md
+docker-compose.yml
+Dockerfile
+.dockerignore
+mcp-stocks-server
+.env
+config.yaml 
