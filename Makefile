@@ -1,9 +1,13 @@
-.PHONY: build run docker-build docker-run docker-compose-up docker-compose-down
+.PHONY: build run docker-build docker-run docker-compose-up docker-compose-down lint
 
 # Переменные
 BINARY_NAME=mcp-stocks-server
 DOCKER_IMAGE=mcp-stocks-server
 DOCKER_COMPOSE=docker-compose
+
+# Запуск линтера
+lint:
+	golangci-lint run ./...
 
 # Сборка приложения
 build:

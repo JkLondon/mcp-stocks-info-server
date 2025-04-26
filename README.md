@@ -2,6 +2,9 @@
 
 MCP (Model Context Protocol) сервер для доступа к данным о котировках акций на Московской бирже (MOEX) и финансовым новостям. Этот сервер предоставляет интерфейс для взаимодействия с LLM (Large Language Models) для получения актуальной информации о котировках и новостях.
 
+[![Go Lint](https://github.com/JkLondon/mcp-stocks-info-server/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/JkLondon/mcp-stocks-info-server/actions/workflows/golangci-lint.yml)
+[![Go Test](https://github.com/JkLondon/mcp-stocks-info-server/actions/workflows/go-test.yml/badge.svg)](https://github.com/JkLondon/mcp-stocks-info-server/actions/workflows/go-test.yml)
+
 ## Возможности
 
 - Получение информации о котировках акций на MOEX
@@ -62,6 +65,25 @@ docker-compose logs
 # Посмотреть логи конкретного сервиса
 docker-compose logs app
 ```
+
+## Разработка
+
+### Линтинг кода
+
+Проект использует [golangci-lint](https://golangci-lint.run/) для статического анализа кода. Для запуска линтера локально:
+
+1. Установите golangci-lint следуя [официальной инструкции](https://golangci-lint.run/usage/install/)
+
+2. Запустите линтер с помощью команды make:
+```bash
+make lint
+```
+
+### Непрерывная интеграция (CI)
+
+Проект настроен с использованием GitHub Actions для автоматического запуска следующих проверок при каждом пуше и PR:
+- Линтинг кода с помощью golangci-lint
+- Сборка и тестирование
 
 ## Запуск без Docker
 
