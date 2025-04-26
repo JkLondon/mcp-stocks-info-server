@@ -7,7 +7,6 @@ import (
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
 	"github.com/JkLondon/mcp-stocks-info-server/internal/core/ports/services"
 	"log"
-	"os"
 	"time"
 
 	"github.com/mark3labs/mcp-go/mcp"
@@ -613,39 +612,4 @@ func formatTickersList(tickers []string) string {
 		result += ticker
 	}
 	return result
-}
-
-// StartServer запускает MCP сервер
-func StartServer(configPath string) error {
-	// Загружаем конфигурацию
-	cfg, err := config.LoadConfig(configPath)
-	if err != nil {
-		// Если не удалось загрузить конфигурацию, используем значения по умолчанию
-		log.Printf("Не удалось загрузить конфигурацию: %v. Используем значения по умолчанию.", err)
-		cfg = &config.Config{}
-		cfg.Cache.DefaultTTL = 5 * time.Minute
-		cfg.Server.Port = 8080
-	}
-
-	// TODO: Создать и инициализировать необходимые сервисы
-
-	// TODO: Создать MCP сервер
-
-	// TODO: Запустить MCP сервер
-
-	// Для дебага
-	log.Printf("Сервер не запущен, так как не реализована инициализация сервисов")
-	return nil
-}
-
-// RunServer запускает сервер из командной строки
-func RunServer() {
-	configPath := "config.yaml"
-	if len(os.Args) > 1 {
-		configPath = os.Args[1]
-	}
-
-	if err := StartServer(configPath); err != nil {
-		log.Fatalf("Ошибка запуска сервера: %v", err)
-	}
 }
