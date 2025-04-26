@@ -19,3 +19,33 @@ linters:
     - unparam
     - bodyclose
     - nilerr
+
+linters-settings:
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+        disabled: false
+        arguments:
+          - "checkPrivateReceivers"
+          - "sayRepetitiveInsteadOfStutters"
+  goimports:
+    local-prefixes: github.com/JkLondon/mcp-stocks-info-server
+
+issues:
+  exclude-use-default: false
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+    # Исключаем ошибки импорта в файлах кэша
+    - path: pkg/cache/cache\.go
+      text: "undefined: redis"
+      linters:
+        - typecheck
+    - path: pkg/cache/memory_cache\.go
+      text: "undefined: cache"
+      linters:
+        - typecheck

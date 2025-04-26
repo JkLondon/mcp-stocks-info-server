@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/JkLondon/mcp-stocks-info-server/internal/config"
-	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
-	"github.com/JkLondon/mcp-stocks-info-server/pkg/cache"
 	"io"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/JkLondon/mcp-stocks-info-server/internal/config"
+	"github.com/JkLondon/mcp-stocks-info-server/internal/core/domain/models"
+	"github.com/JkLondon/mcp-stocks-info-server/pkg/cache"
 )
 
 // MOEXAPIClient представляет собой клиент для работы с API MOEX
@@ -204,7 +205,7 @@ func parseStockFromResponse(data map[string]interface{}, ticker string) *models.
 		}
 	}
 
-	return stock, nil
+	return stock
 }
 
 // parseStocksFromResponse преобразует JSON-ответ в слайс моделей Stock
